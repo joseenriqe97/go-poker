@@ -3,80 +3,84 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 func main() {
 	/* cartas := [5]string{10, 20, 30, 40, 50}
 	fmt.Println("hola") */
 
-	testAlgorithm([]int{7, 3, 2})
+	fmt.Print(testAlgorithm([]int{14, 2, 3, 4, 5}))
 }
 
-func testAlgorithm(cards []int) {
+func testAlgorithm(cards []int) (bool, string) {
 	var auxP int
+	var response string
 	deckOfCards := make(map[string][]int)
 	brokeSequence := false
-	//Ordenamos el array
 
-	sort.Slice(cards, func(i, j int) bool {
+	/* cardsAsc := sort.Slice(cards, func(i, j int) bool {
 		return cards[i] < cards[j]
-	})
+	}) */
 	for x := range cards {
-		// fmt.Print(cards[x+1] - cards[x])
-		/* if x == 0 && cards[x+1]-cards[x] == 1 {
-			// aux = []int{cards[x], cards[x+1]}
-			aux = append(aux, cards[x], cards[x+1])
-		} */
-		if !brokeSequence && x < len(cards)-1 && cards[x]-cards[x+1] == -1 {
-			/* if deckOfCards["1MANO"] == nil {
-				deckOfCards["1MANO"] = make([]int, cards[x], cards[x+1])
-			} */
 
-			if len(deckOfCards["1MANO"]) > 0 {
-				// fmt.Println("entramops", cards[x], cards[x+auxP])
-				deckOfCards["1MANO"] = append(deckOfCards["1MANO"], cards[x+auxP])
+		if !brokeSequence && x < len(cards)-1 && cards[x]-cards[x+1] == -1 {
+
+			if len(deckOfCards["firstHand"]) > 0 {
+				deckOfCards["firstHand"] = append(deckOfCards["firstHand"], cards[x+auxP])
 
 			} else {
-				deckOfCards["1MANO"] = append(deckOfCards["1MANO"], cards[x], cards[x+1])
+				deckOfCards["firstHand"] = append(deckOfCards["firstHand"], cards[x], cards[x+1])
 				auxP = x + 1
 			}
-			// fmt.Print("entramos     ")
 
-			fmt.Println(deckOfCards["1MANO"])
 		} else {
 			brokeSequence = true
 		}
 		if brokeSequence && x < len(cards)-1 && cards[x]-cards[x+1] == -1 {
-			if len(deckOfCards["2MANO"]) > 0 && x < len(cards)-1 {
-				// fmt.Println("entramops", cards[x], cards[x+auxP])
-				deckOfCards["2MANO"] = append(deckOfCards["2MANO"], cards[auxP+1])
-				auxP = x + 1
+			auxP = x + 1
+			if len(deckOfCards["secondHand"]) > 0 && x < len(cards)-1 {
+				deckOfCards["secondHand"] = append(deckOfCards["secondHand"], cards[auxP+1])
 			} else {
-				deckOfCards["2MANO"] = append(deckOfCards["2MANO"], cards[x], cards[x+1])
-				auxP = x + 1
+				deckOfCards["secondHand"] = append(deckOfCards["secondHand"], cards[x], cards[x+1])
+
 			}
 			if x == len(cards)-1 {
-				deckOfCards["2MANO"] = append(deckOfCards["2MANO"], cards[x])
+				deckOfCards["secondHand"] = append(deckOfCards["secondHand"], cards[x])
 			}
 		}
-		// fmt.Println(auxP)
-		/* if x > 0 && x != len(cards)-1 {
-			if aux[len(aux)-1] != cards[x] {
-				aux = append(aux, cards[x])
-			}
-		}
-		if x == len(cards)-1 && cards[x-1]-cards[x] == -1 {
-			aux = append(aux, cards[x])
-		} */
-
-		// fmt.Print(cards[x])
 	}
 
-	/* if aux[len(aux)-1]-aux[0] != aux[len(aux)-1]-1 {
-		fmt.Print("false")
-	} */
-	fmt.Print(deckOfCards)
+	if len(deckOfCards["firstHand"])-1 == 5 {
+		response = arrayToString(deckOfCards["firstHand"], ",", false)
+		return true, response
+	}
 
+	if len(deckOfCards["secondHand"])-1 == 5 {
+		response = arrayToString(deckOfCards["secondHand"], ",", false)
+		return true, response
+	}
+	if len(deckOfCards["firstHand"]) == 4 && cards[len(cards)-1] == 14 {
+
+		if deckOfCards["firstHand"][0] == 2 {
+			deckOfCards["firstHand"] = append(deckOfCards["firstHand"][1:len(slice)-1], cards[len(cards)-1])
+		}
+
+		response = arrayToString(deckOfCards["firstHand"], ",", false)
+		return true, response
+	}
+	response = arrayToString(cards, ",", true)
+
+	return false, response
+}
+
+func arrayToString(item []int, delim string, asc bool) string {
+	if asc {
+		sort.Slice(item, func(i, j int) bool {
+			return item[i] > item[j]
+		})
+	}
+	return strings.Trim(strings.Replace(fmt.Sprint(item), " ", delim, -1), "[]")
 }
 
 // func find()
