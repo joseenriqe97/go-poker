@@ -7,21 +7,24 @@ import (
 )
 
 func main() {
-	/* cartas := [5]string{10, 20, 30, 40, 50}
-	fmt.Println("hola") */
-
-	fmt.Print(testAlgorithm([]int{14, 2, 3, 4, 5}))
+	fmt.Print(TestAlgorithm([]int{2, 3, 4, 5, 6}))
 }
 
-func testAlgorithm(cards []int) (bool, string) {
-	var auxP int
-	var response string
+func TestAlgorithm(cardsItem []int) (bool, string) {
+	var (
+		auxP     int
+		response string
+	)
+	//Para romper referencia
+	cards := make([]int, len(cardsItem))
+	copy(cards, cardsItem)
+
 	deckOfCards := make(map[string][]int)
 	brokeSequence := false
 
-	/* cardsAsc := sort.Slice(cards, func(i, j int) bool {
+	sort.Slice(cards, func(i, j int) bool {
 		return cards[i] < cards[j]
-	}) */
+	})
 	for x := range cards {
 
 		if !brokeSequence && x < len(cards)-1 && cards[x]-cards[x+1] == -1 {
@@ -50,26 +53,25 @@ func testAlgorithm(cards []int) (bool, string) {
 			}
 		}
 	}
-
-	if len(deckOfCards["firstHand"])-1 == 5 {
-		response = arrayToString(deckOfCards["firstHand"], ",", false)
+	if len(deckOfCards["firstHand"]) == 5 {
+		response = arrayToString(cardsItem, ",", false)
 		return true, response
 	}
 
-	if len(deckOfCards["secondHand"])-1 == 5 {
-		response = arrayToString(deckOfCards["secondHand"], ",", false)
+	if len(deckOfCards["secondHand"]) == 5 {
+		response = arrayToString(cardsItem, ",", false)
 		return true, response
 	}
 	if len(deckOfCards["firstHand"]) == 4 && cards[len(cards)-1] == 14 {
 
-		if deckOfCards["firstHand"][0] == 2 {
-			deckOfCards["firstHand"] = append(deckOfCards["firstHand"][1:len(slice)-1], cards[len(cards)-1])
-		}
+		/* if deckOfCards["firstHand"][0] == 2 {
+			deckOfCards["firstHand"] = append(deckOfCards["firstHand"][:], cards[len(cards)-1])
+		} */
 
-		response = arrayToString(deckOfCards["firstHand"], ",", false)
+		response = arrayToString(cardsItem, ",", false)
 		return true, response
 	}
-	response = arrayToString(cards, ",", true)
+	response = arrayToString(cardsItem, ",", false)
 
 	return false, response
 }
@@ -82,7 +84,3 @@ func arrayToString(item []int, delim string, asc bool) string {
 	}
 	return strings.Trim(strings.Replace(fmt.Sprint(item), " ", delim, -1), "[]")
 }
-
-// func find()
-
-/* 2 5 7 8 9 10 11 */
