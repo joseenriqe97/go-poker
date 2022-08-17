@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	TestAlgorithm([]int{14, 5, 4, 2, 3})
+	TestAlgorithm([]int{14, 5, 4, 2, 3, 1})
 }
 
 func TestAlgorithm(cardsItem []int) (bool, string) {
@@ -15,10 +15,21 @@ func TestAlgorithm(cardsItem []int) (bool, string) {
 		response string
 		count    int
 	)
-	//TODO: It remains to validate the length of the array and that it is not less than 2
 	sort.Slice(cardsItem, func(i, j int) bool {
 		return cardsItem[i] < cardsItem[j]
 	})
+
+	if len(cardsItem) > 7 {
+		return false, arrayToString(cardsItem, ",")
+	}
+
+	if cardsItem[0] < 2 {
+		return false, arrayToString(cardsItem, ",")
+	}
+
+	if cardsItem[len(cardsItem)-1] > 14 {
+		return false, arrayToString(cardsItem, ",")
+	}
 
 	count = 1
 
